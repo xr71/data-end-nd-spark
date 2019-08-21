@@ -14,6 +14,10 @@ os.environ['AWS_SECRET_ACCESS_KEY']=config['CREDENTIAL']['AWS_SECRET_ACCESS_KEY'
 
 
 def create_spark_session():
+    """
+        This creates the spark session object that will be used by the rest of this script to perform
+        the ETL process. 
+    """
     spark = SparkSession \
         .builder \
         .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
@@ -22,6 +26,12 @@ def create_spark_session():
 
 
 def process_song_data(spark, input_data, output_data):
+    """
+        This function reads multiple JSON files as specified in the input_data location
+        and processes it for loading. It takes a spark session object as a parameter 
+        and will write the post-transformed tables as Parquet files as specified in the 
+        output_data parameter.
+    """
     # get filepath to song data file
     song_data = input_data + "song_data/*/*/*/*.json"
     
@@ -62,6 +72,12 @@ def process_song_data(spark, input_data, output_data):
     
 
 def process_log_data(spark, input_data, output_data):
+    """
+        This function reads multiple event logs JSON files as specified in the input_data
+        location. It takes in a spark session object as a parameter and will process
+        the event logs and then write the post-transformed tables as Parquet files 
+        to the specified output_data location. 
+    """
     # get filepath to log data file
     log_data = input_data + "log_data/2018/11/*.json"
 
@@ -133,6 +149,10 @@ def process_log_data(spark, input_data, output_data):
 
 
 def main():
+    """
+        This is the main entrypoint of the script and will orchestrate all 
+        spark session creation and the subsequent two ETL processing functions.
+    """
     spark = create_spark_session()
     input_data = "s3a://udacity-dend/"
     output_data = "s3a://xuren-data-eng-nd/spark_dl/"
